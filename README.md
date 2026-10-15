@@ -1,28 +1,45 @@
 # LOCKER
 
-A React + Vite starter for a personal digital locker dashboard.
+A responsive React + Vite personal locker prototype with optional Supabase authentication and a database schema.
 
-## Current build
+## Current features
 
-- Responsive dashboard with sidebar navigation
-- Overview cards for items, starred items, storage, and status
+- Responsive dashboard and mobile navigation
 - Search, starred items, recent items, and demo trash view
-- Create placeholder folders/items and star or remove them
-- Responsive desktop, tablet, and mobile layout
+- Create placeholder folders/items in the current browser session
+- Supabase email/password sign-up, sign-in, and sign-out when environment variables are configured
+- SQL schema for user profiles and private per-user item metadata with Row Level Security
+- Optional private Storage bucket policies for files
+
+## Connect Supabase
+
+1. Open your Supabase project dashboard.
+2. Go to **SQL Editor**, create a new query, paste all of `supabase/schema.sql`, and run it.
+3. In **Project Settings → API** (the exact menu label may vary), copy your Project URL and the publishable/anon client key. Never use a service-role key in browser code.
+4. In your deployment provider's environment-variable settings, add:
+   - `VITE_SUPABASE_URL` = your Project URL
+   - `VITE_SUPABASE_ANON_KEY` = your publishable/anon key
+5. Redeploy the app after adding the variables.
+6. In **Authentication → URL Configuration**, set the Site URL to your deployed website and add its URL to the allowed redirect URLs.
+7. If you want file uploads later, create a **private** Storage bucket named `locker-files`. The SQL file includes owner-folder policies for it.
+
+For local development, copy `.env.example` to `.env.local` and fill in those values. Do not commit real environment values.
 
 ## Run locally
 
-Requires Node.js 20.19+ or 22.12+.
+Requires a current Node.js version compatible with Vite 6.
 
 ```bash
 npm install
 npm run dev
 ```
 
-Open the local URL printed by Vite. For a production build, run `npm run build`.
+For a production bundle:
 
-## Important security note
+```bash
+npm run build
+```
 
-This is the first UI prototype. The displayed files, storage usage, and security status are sample data. Creating an item only changes the current page state; nothing is uploaded or saved. Do not enter real passwords, private documents, or sensitive information yet.
+## Important current limitations
 
-Before using this for real private files, add a backend, real authentication, server-side authorization, encrypted file storage, safe upload validation, and backups. Keep secrets in deployment environment variables, never in frontend code or committed files.
+The dashboard items are still demo state and are not yet loaded from or saved to Supabase. Authentication is real only after valid Supabase URL/key values are configured and the database project is set up. The app does not yet upload files, encrypt file contents itself, or have a tested deployment. Do not store sensitive documents until those parts are implemented and tested.
